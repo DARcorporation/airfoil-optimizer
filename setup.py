@@ -11,7 +11,14 @@ setup(
     author="Daniel de Vries",
     author_email="danieldevries6@gmail.com",
     packages=find_packages(),
-    install_requires=["numpy>=1.17", "openmdao>=2.8", "cst", "differential_evolution", "matplotlib"],
+    install_requires=[
+        "numpy>=1.17",
+        "openmdao<2.10,>=2.9",
+        "h5py<3,>=2.10.0",
+        "cst==1.0.1",
+        "differential_evolution==1.6.0",
+        "matplotlib<4,>=3"
+    ],
     url="https://github.com/daniel-de-vries/airfoil-optimizer",
     download_url="https://github.com/daniel-de-vries/airfoil-optimizer/archive/v{0}.tar.gz".format(
         __version__
