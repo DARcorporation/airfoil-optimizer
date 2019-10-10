@@ -124,6 +124,8 @@ def write(prob, filename):
 
 def main(
     cl,
+    re,
+    ma,
     n_c,
     n_t,
     gen=100,
@@ -149,6 +151,10 @@ def main(
     ----------
     cl : float
         Design lift coefficient
+    re : float
+        Reynolds number
+    ma : float
+        Mach number
     n_c, n_t : int
         Number of CST coefficients for the chord line and thickness distribution, respectively
     gen : int, optional
@@ -198,6 +204,8 @@ def main(
 
     # Set reference values
     prob["Cl_des"] = cl
+    prob["Re"] = re
+    prob["M"] = ma
 
     # Optimize the problem using a genetic algorithm
     t0 = time.time()
@@ -225,26 +233,28 @@ def main(
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 19:
+    if len(sys.argv) == 21:
         main(
             cl=float(sys.argv[1]),
-            n_c=int(sys.argv[2]),
-            n_t=int(sys.argv[3]),
-            gen=int(sys.argv[4]),
-            tolx=float(sys.argv[5]),
-            tolf=float(sys.argv[6]),
-            fix_te=(sys.argv[7] == "True"),
-            t_te_min=float(sys.argv[8]),
-            t_c_min=None if sys.argv[9] == "None" else float(sys.argv[9]),
-            A_cs_min=None if sys.argv[10] == "None" else float(sys.argv[10]),
-            Cm_max=None if sys.argv[11] == "None" else float(sys.argv[11]),
-            strategy=sys.argv[12],
-            f=None if sys.argv[13] == "None" else float(sys.argv[13]),
-            cr=None if sys.argv[14] == "None" else float(sys.argv[14]),
-            adaptivity=int(sys.argv[15]),
-            repr_file=sys.argv[16],
-            dat_file=sys.argv[17],
-            png_file=sys.argv[18],
+            re=float(sys.argv[2]),
+            ma=float(sys.argv[3]),
+            n_c=int(sys.argv[4]),
+            n_t=int(sys.argv[5]),
+            gen=int(sys.argv[6]),
+            tolx=float(sys.argv[7]),
+            tolf=float(sys.argv[8]),
+            fix_te=(sys.argv[9] == "True"),
+            t_te_min=float(sys.argv[10]),
+            t_c_min=None if sys.argv[11] == "None" else float(sys.argv[11]),
+            A_cs_min=None if sys.argv[12] == "None" else float(sys.argv[12]),
+            Cm_max=None if sys.argv[13] == "None" else float(sys.argv[13]),
+            strategy=sys.argv[14],
+            f=None if sys.argv[15] == "None" else float(sys.argv[15]),
+            cr=None if sys.argv[16] == "None" else float(sys.argv[16]),
+            adaptivity=int(sys.argv[17]),
+            repr_file=sys.argv[18],
+            dat_file=sys.argv[19],
+            png_file=sys.argv[20],
         )
     else:
         main(1.0, 3, 3, gen=9)
