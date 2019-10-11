@@ -21,7 +21,7 @@ class Geom(AirfoilComponent):
         self.add_output("r_le", val=0.0)
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
-        x, y_u, y_l, _, t = self.compute_coords(inputs, 500)
+        x, y_u, y_l, _, t = self.compute_coords(inputs)
 
         outputs["t_c"] = np.max(t)
         outputs["A_cs"] = np.trapz(t, x)
@@ -36,4 +36,7 @@ class Geom(AirfoilComponent):
         d2y = np.gradient(dy)
 
         curvature = np.abs(d2x * dy - dx * d2y) / (dx * dx + dy * dy) ** 1.5
-        outputs["r_le"] = 1.0 / curvature[x.size]
+        if np.isnan(curvature[x.size]) or np.isinf(curvature[x.size]) or curvature[x.size] == 0.0:
+            outputs["r_le"] = 0.0
+        else:
+            outputs["r_le"] = 1.0 / curvature[x.size]
