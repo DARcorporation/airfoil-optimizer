@@ -92,12 +92,15 @@ class AirfoilComponent(om.ExplicitComponent):
         self.add_input("a_t", shape=n_t)
         self.add_input("t_te", shape=1)
 
-    def compute_coords(self, inputs, precision=None):
+    def compute_coords(self, inputs, precision=None, n_coords=None):
         """
         Compute airfoil coordinates from the set of OpenMDAO inputs.
         """
         x, y_u, y_l, y_c, t = cst2coords(
-            inputs["a_c"], inputs["a_t"], inputs["t_te"][0], self.options["n_coords"]
+            inputs["a_c"],
+            inputs["a_t"],
+            inputs["t_te"][0],
+            self.options["n_coords"] if n_coords is None else n_coords,
         )
         if precision is not None:
             return (

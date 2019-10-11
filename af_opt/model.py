@@ -23,6 +23,7 @@ class AfOptModel(om.Group):
             "t_te_min", default=0.0, lower=0.0, types=float, allow_none=False
         )
         self.options.declare("t_c_min", default=0.1, types=float, allow_none=True)
+        self.options.declare("r_le_min", default=0.05, types=float, allow_none=True)
         self.options.declare("A_cs_min", default=0.1, types=float, allow_none=True)
         self.options.declare("Cm_max", default=None, types=float, allow_none=True)
 
@@ -78,27 +79,37 @@ class AfOptModel(om.Group):
             )
             self.add_constraint("g1", upper=0.0)  # t_c >= t_c_min
 
-        if self.options["A_cs_min"] is not None:
+        if self.options["r_le_min"] is not None:
             self.add_subsystem(
                 "G2",
                 om.ExecComp(
-                    f"g2 = 1 - A_cs / {self.options['A_cs_min']:15g}", g2=0, A_cs=1.0
+                    f"g2 = 1 - r_le / {self.options['r_le_min']:15g}", g2=0.0, r_le=1.0
                 ),
                 promotes=["*"],
             )
-            self.add_constraint("g2", upper=0.0)  # A_cs >= A_cs_min
+            self.add_constraint("g2", upper=0.0)  # r_le >= r_le_min
 
-        if self.options["Cm_max"] is not None:
+        if self.options["A_cs_min"] is not None:
             self.add_subsystem(
                 "G3",
                 om.ExecComp(
-                    f"g3 = 1 - abs(Cm) / {np.abs(self.options['Cm_max']):15g}",
-                    g3=0.0,
+                    f"g3 = 1 - A_cs / {self.options['A_cs_min']:15g}", g3=0, A_cs=1.0
+                ),
+                promotes=["*"],
+            )
+            self.add_constraint("g3", upper=0.0)  # A_cs >= A_cs_min
+
+        if self.options["Cm_max"] is not None:
+            self.add_subsystem(
+                "G4",
+                om.ExecComp(
+                    f"g4 = 1 - abs(Cm) / {np.abs(self.options['Cm_max']):15g}",
+                    g4=0.0,
                     Cm=1.0,
                 ),
                 promotes=["*"],
             )
-            self.add_constraint("g3", lower=0.0)  # |Cm| <= |Cm_max|
+            self.add_constraint("g4", lower=0.0)  # |Cm| <= |Cm_max|
 
     def __repr__(self):
         outputs = dict(self.list_outputs(out_stream=None))
@@ -115,6 +126,8 @@ class AfOptModel(om.Group):
         ) + f"t_te: {self.options['t_te_min']:.4g}\n"
         if self.options["t_c_min"] is not None:
             yaml += f"t_c_min: {self.options['t_c_min']:.4g}\n"
+        if self.options["r_le_min"] is not None:
+            yaml += f"r_le_min: {self.options['r_le_min']:.4g}\n"
         if self.options["A_cs_min"] is not None:
             yaml += f"A_cs_min: {self.options['A_cs_min']:.4g}\n"
         if self.options["Cm_max"] is not None:
@@ -122,6 +135,7 @@ class AfOptModel(om.Group):
         yaml += f"Cd: {outputs['XFoil.Cd']['value'][0]:.4g}\n"
         yaml += f"Cm: {outputs['XFoil.Cm']['value'][0]: .4g}\n"
         yaml += f"t_c: {outputs['Geom.t_c']['value'][0]:.4g}\n"
+        yaml += f"r_le: {outputs['Geom.r_le']['value'][0]:.4g}\n"
         yaml += f"A_cs: {outputs['Geom.A_cs']['value'][0]:.4g}\n"
         yaml += f"a_c: {np.array2string(outputs['ivc.a_c']['value'], formatter=desvar_formatter, separator=', ')}\n"
         yaml += f"a_t: {np.array2string(outputs['ivc.a_t']['value'], formatter=desvar_formatter, separator=', ')}"

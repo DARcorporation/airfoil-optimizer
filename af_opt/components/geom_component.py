@@ -18,8 +18,22 @@ class Geom(AirfoilComponent):
         # Outputs
         self.add_output("t_c", val=0.0)
         self.add_output("A_cs", val=0.0)
+        self.add_output("r_le", val=0.0)
 
     def compute(self, inputs, outputs, discrete_inputs=None, discrete_outputs=None):
-        x, _, _, _, t = self.compute_coords(inputs)
+        x, y_u, y_l, _, t = self.compute_coords(inputs, 500)
+
         outputs["t_c"] = np.max(t)
         outputs["A_cs"] = np.trapz(t, x)
+
+        xs = np.concatenate((np.flip(x), x[1:]))
+        ys = np.concatenate((np.flip(y_u), y_l[1:]))
+
+        dx = np.gradient(xs)
+        dy = np.gradient(ys)
+
+        d2x = np.gradient(dx)
+        d2y = np.gradient(dy)
+
+        curvature = np.abs(d2x * dy - dx * d2y) / (dx * dx + dy * dy) ** 1.5
+        outputs["r_le"] = 1.0 / curvature[x.size]

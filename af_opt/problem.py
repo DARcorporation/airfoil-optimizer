@@ -134,6 +134,7 @@ def main(
     fix_te=True,
     t_te_min=0.0,
     t_c_min=0.01,
+    r_le_min=0.05,
     A_cs_min=None,
     Cm_max=None,
     strategy="rand-to-best/1/exp/random",
@@ -169,6 +170,8 @@ def main(
         Minimum TE thickness as fraction of chord length. Default is 0.0.
     t_c_min : float or None, optional
         Minimum thickness over chord ratio. None if unconstrained. Defaults is 0.01.
+    r_le_min : float or None, optional
+        Minimum leading edge radius. None if unconstrained. Defaults is 0.05.
     A_cs_min : float or None, optional
         Minimum cross sectional area. None if unconstrained. Default is None.
     Cm_max : float or None, optional
@@ -191,6 +194,7 @@ def main(
         fix_te=fix_te,
         t_te_min=t_te_min,
         t_c_min=t_c_min,
+        r_le_min=r_le_min,
         A_cs_min=A_cs_min,
         Cm_max=Cm_max,
     )
@@ -233,7 +237,7 @@ def main(
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 21:
+    if len(sys.argv) == 22:
         main(
             cl=float(sys.argv[1]),
             re=float(sys.argv[2]),
@@ -246,15 +250,16 @@ if __name__ == "__main__":
             fix_te=(sys.argv[9] == "True"),
             t_te_min=float(sys.argv[10]),
             t_c_min=None if sys.argv[11] == "None" else float(sys.argv[11]),
-            A_cs_min=None if sys.argv[12] == "None" else float(sys.argv[12]),
-            Cm_max=None if sys.argv[13] == "None" else float(sys.argv[13]),
-            strategy=sys.argv[14],
-            f=None if sys.argv[15] == "None" else float(sys.argv[15]),
-            cr=None if sys.argv[16] == "None" else float(sys.argv[16]),
-            adaptivity=int(sys.argv[17]),
-            repr_file=sys.argv[18],
-            dat_file=sys.argv[19],
-            png_file=sys.argv[20],
+            r_le_min=None if sys.argv[12] == "None" else float(sys.argv[12]),
+            A_cs_min=None if sys.argv[13] == "None" else float(sys.argv[13]),
+            Cm_max=None if sys.argv[14] == "None" else float(sys.argv[14]),
+            strategy=sys.argv[15],
+            f=None if sys.argv[16] == "None" else float(sys.argv[15]),
+            cr=None if sys.argv[17] == "None" else float(sys.argv[16]),
+            adaptivity=int(sys.argv[18]),
+            repr_file=sys.argv[19],
+            dat_file=sys.argv[20],
+            png_file=sys.argv[21],
         )
     else:
-        main(1.0, 3, 3, gen=9)
+        main(1.0, 1e6, 0.0, 3, 3, gen=9)
