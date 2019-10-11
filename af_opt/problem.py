@@ -133,7 +133,7 @@ def main(
     tolf=1e-8,
     fix_te=True,
     t_te_min=0.0,
-    t_min=0.01,
+    t_c_min=0.01,
     A_cs_min=None,
     Cm_max=None,
     strategy="rand-to-best/1/exp/random",
@@ -167,7 +167,7 @@ def main(
         True if the trailing edge thickness should be fixed. True by default
     t_te_min : float, optional
         Minimum TE thickness as fraction of chord length. Default is 0.0.
-    t_min : float or None, optional
+    t_c_min : float or None, optional
         Minimum thickness over chord ratio. None if unconstrained. Defaults is 0.01.
     A_cs_min : float or None, optional
         Minimum cross sectional area. None if unconstrained. Default is None.
@@ -190,7 +190,7 @@ def main(
         n_t=n_t,
         fix_te=fix_te,
         t_te_min=t_te_min,
-        t_min=t_min,
+        t_c_min=t_c_min,
         A_cs_min=A_cs_min,
         Cm_max=Cm_max,
     )
@@ -245,7 +245,7 @@ if __name__ == "__main__":
             tolf=float(sys.argv[8]),
             fix_te=(sys.argv[9] == "True"),
             t_te_min=float(sys.argv[10]),
-            t_min=None if sys.argv[11] == "None" else float(sys.argv[11]),
+            t_c_min=None if sys.argv[11] == "None" else float(sys.argv[11]),
             A_cs_min=None if sys.argv[12] == "None" else float(sys.argv[12]),
             Cm_max=None if sys.argv[13] == "None" else float(sys.argv[13]),
             strategy=sys.argv[14],
@@ -257,4 +257,4 @@ if __name__ == "__main__":
             png_file=sys.argv[20],
         )
     else:
-        main(1.0, 1e6, 0.0, 3, 3, gen=9)
+        main(1.0, 3, 3, gen=9)
