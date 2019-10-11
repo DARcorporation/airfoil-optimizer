@@ -22,7 +22,7 @@ class AfOptModel(om.Group):
         self.options.declare(
             "t_te_min", default=0.0, lower=0.0, types=float, allow_none=False
         )
-        self.options.declare("t_c_min", default=0.1, types=float, allow_none=True)
+        self.options.declare("t_min", default=0.1, types=float, allow_none=True)
         self.options.declare("A_cs_min", default=0.1, types=float, allow_none=True)
         self.options.declare("Cm_max", default=None, types=float, allow_none=True)
 
@@ -45,6 +45,7 @@ class AfOptModel(om.Group):
         ivc.add_output("a_c", val=np.zeros(n_c))
         ivc.add_output("a_t", val=np.zeros(n_t))
         ivc.add_output("t_te", val=self.options["t_te_min"])
+        ivc.add_output("t_min", val=self.options["t_min"])
         ivc.add_output("Re", val=1e6)
         ivc.add_output("M", val=0.0)
         ivc.add_output("Cl_des", val=1.0)
@@ -68,15 +69,8 @@ class AfOptModel(om.Group):
         # Constraints
         self.add_subsystem("Geom", Geom(n_c=n_c, n_t=n_t), promotes=["*"])
 
-        if self.options["t_c_min"] is not None:
-            self.add_subsystem(
-                "G1",
-                om.ExecComp(
-                    f"g1 = 1 - t_c / {self.options['t_c_min']:15g}", g1=0.0, t_c=1.0
-                ),
-                promotes=["*"],
-            )
-            self.add_constraint("g1", upper=0.0)  # t_c >= t_c_min
+        if self.options["t_min"] is not None:
+            self.add_constraint("g1", upper=0.0)  # t >= t_min
 
         if self.options["A_cs_min"] is not None:
             self.add_subsystem(
@@ -113,8 +107,8 @@ class AfOptModel(om.Group):
         yaml += (
             "" if self.options["fix_te"] else "min "
         ) + f"t_te: {self.options['t_te_min']:.4g}\n"
-        if self.options["t_c_min"] is not None:
-            yaml += f"t_c_min: {self.options['t_c_min']:.4g}\n"
+        if self.options["t_min"] is not None:
+            yaml += f"t_min: {self.options['t_min']:.4g}\n"
         if self.options["A_cs_min"] is not None:
             yaml += f"A_cs_min: {self.options['A_cs_min']:.4g}\n"
         if self.options["Cm_max"] is not None:
