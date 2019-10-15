@@ -111,6 +111,7 @@ def analyze_airfoil(
         xf.Re = rey
         xf.M = mach
         xf.max_iter = 100
+        xf.n_crit = 0.1
         cd, cm = pool.apply(xfoil_worker, args=(xf, cl))
 
     if clean_xf:
