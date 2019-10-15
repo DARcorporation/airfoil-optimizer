@@ -15,8 +15,8 @@ setup(
         "numpy>=1.17",
         "openmdao<2.10,>=2.8",
         "h5py<3,>=2.10.0",
-        "cst==1.0.1",
-        "differential_evolution==1.7.0",
+        "cst<2,>=1.0.1",
+        "differential_evolution<2,>=1.7.0",
         "matplotlib<4,>=3"
     ],
     url="https://github.com/daniel-de-vries/airfoil-optimizer",
