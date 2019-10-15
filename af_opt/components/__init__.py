@@ -3,5 +3,5 @@
 """
 This file contains imports from the sub modules.
 """
-from .xfoil_component import XFoilComp
-from .geom_component import Geom
+from .xfoil import XFoilAnalysis
+from .geometry import Geometry

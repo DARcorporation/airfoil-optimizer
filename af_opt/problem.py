@@ -12,7 +12,7 @@ from datetime import timedelta
 from differential_evolution import DifferentialEvolutionDriver
 
 from . import rank, run_parallel
-from .components.airfoil_component import cst2coords
+from .components.airfoil import cst2coords
 from .model import AfOptModel
 from .recorders import PopulationReporter
 
@@ -58,7 +58,7 @@ def get_coords(prob):
     np.ndarray
         (n, 2) array of x-, and y-coordinates of the airfoil in counterclockwise direction
     """
-    x, y_u, y_l, _, _ = cst2coords(prob["a_c"], prob["a_t"], prob["t_te"])
+    x, y_u, y_l, _, _ = cst2coords(prob["a_ca"], prob["a_th"], prob["t_te"])
     x = np.reshape(x, (-1, 1))
     y_u = np.reshape(y_u, (-1, 1))
     y_l = np.reshape(y_l, (-1, 1))
@@ -89,7 +89,7 @@ def plot(prob, display=False):
     from matplotlib.ticker import MultipleLocator
 
     fig, ax = plt.subplots()
-    x, y_u, y_l, y_c, _ = cst2coords(prob["a_c"], prob["a_t"], prob["t_te"])
+    x, y_u, y_l, y_c, _ = cst2coords(prob["a_ca"], prob["a_th"], prob["t_te"])
     ax.plot(x, y_u, "k", x, y_l, "k", x, y_c, "k--")
     ax.axis("scaled")
     ax.set_xlabel("x/c")
@@ -126,8 +126,8 @@ def main(
     cl,
     re,
     ma,
-    n_c,
-    n_t,
+    n_ca,
+    n_th,
     gen=100,
     tolx=1e-8,
     tolf=1e-8,
@@ -156,7 +156,7 @@ def main(
         Reynolds number
     ma : float
         Mach number
-    n_c, n_t : int
+    n_ca, n_th : int
         Number of CST coefficients for the chord line and thickness distribution, respectively
     gen : int, optional
         Number of generations to use for the genetic algorithm. 100 by default
@@ -189,8 +189,8 @@ def main(
     """
     # Construct the OpenMDAO Problem
     kwargs = dict(
-        n_c=n_c,
-        n_t=n_t,
+        n_ca=n_ca,
+        n_th=n_th,
         fix_te=fix_te,
         t_te_min=t_te_min,
         t_c_min=t_c_min,
@@ -242,8 +242,8 @@ if __name__ == "__main__":
             cl=float(sys.argv[1]),
             re=float(sys.argv[2]),
             ma=float(sys.argv[3]),
-            n_c=int(sys.argv[4]),
-            n_t=int(sys.argv[5]),
+            n_ca=int(sys.argv[4]),
+            n_th=int(sys.argv[5]),
             gen=int(sys.argv[6]),
             tolx=float(sys.argv[7]),
             tolf=float(sys.argv[8]),

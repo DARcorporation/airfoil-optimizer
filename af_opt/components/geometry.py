@@ -5,10 +5,10 @@ This file contains the definition of the Airfoil Geometry OpenMDAO Component.
 """
 import numpy as np
 
-from .airfoil_component import AirfoilComponent
+from .airfoil import AirfoilComponent
 
 
-class Geom(AirfoilComponent):
+class Geometry(AirfoilComponent):
     """
     Computes the thickness-over-chord ratio and cross-sectional area of an airfoil.
     """
@@ -36,7 +36,11 @@ class Geom(AirfoilComponent):
         d2y = np.gradient(dy)
 
         curvature = np.abs(d2x * dy - dx * d2y) / (dx * dx + dy * dy) ** 1.5
-        if np.isnan(curvature[x.size]) or np.isinf(curvature[x.size]) or curvature[x.size] == 0.0:
+        if (
+            np.isnan(curvature[x.size])
+            or np.isinf(curvature[x.size])
+            or curvature[x.size] == 0.0
+        ):
             outputs["r_le"] = 0.0
         else:
             outputs["r_le"] = 1.0 / curvature[x.size]

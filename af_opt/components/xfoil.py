@@ -11,7 +11,7 @@ from xfoil import XFoil
 from xfoil.model import Airfoil
 
 from .. import rank
-from .airfoil_component import AirfoilComponent
+from .airfoil import AirfoilComponent
 
 
 def xfoil_worker(xf, cl_spec, consistency_check=True):
@@ -122,7 +122,7 @@ def analyze_airfoil(
     return cd, cm, None if clean_xf else xf
 
 
-class XFoilComp(AirfoilComponent):
+class XFoilAnalysis(AirfoilComponent):
     """
     Computes the drag coefficient of an airfoil at a given lift coefficient, Reynolds nr., and Mach nr.
     """
@@ -179,14 +179,14 @@ class XFoilComp(AirfoilComponent):
         if self.options["print"]:
             print(
                 f"{rank:02d} :: "
-                + "a_c: {}, ".format(
+                + "a_ca: {}, ".format(
                     np.array2string(
-                        inputs["a_c"], separator=", ", formatter=self.array_formatter
+                        inputs["a_ca"], separator=", ", formatter=self.array_formatter
                     )
                 )
-                + "a_t: {}, ".format(
+                + "a_th: {}, ".format(
                     np.array2string(
-                        inputs["a_t"], separator=", ", formatter=self.array_formatter
+                        inputs["a_th"], separator=", ", formatter=self.array_formatter
                     )
                 )
                 + f't_te: {inputs["t_te"][0]: 6.4f}, '
