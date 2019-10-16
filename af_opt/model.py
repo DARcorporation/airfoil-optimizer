@@ -134,9 +134,9 @@ class AfOptModel(om.Group):
             yaml += f"Cm_max: {self.options['Cm_max']:.4g}\n"
         yaml += f"Cd: {outputs['XFoil.Cd']['value'][0]:.4g}\n"
         yaml += f"Cm: {outputs['XFoil.Cm']['value'][0]: .4g}\n"
-        yaml += f"t_c: {outputs['Geom.t_c']['value'][0]:.4g}\n"
-        yaml += f"r_le: {outputs['Geom.r_le']['value'][0]:.4g}\n"
-        yaml += f"A_cs: {outputs['Geom.A_cs']['value'][0]:.4g}\n"
+        yaml += f"t_c: {outputs['Geometry.t_c']['value'][0]:.4g}\n"
+        yaml += f"r_le: {outputs['Geometry.r_le']['value'][0]:.4g}\n"
+        yaml += f"A_cs: {outputs['Geometry.A_cs']['value'][0]:.4g}\n"
         yaml += f"a_ca: {np.array2string(outputs['ivc.a_ca']['value'], formatter=desvar_formatter, separator=', ')}\n"
         yaml += f"a_th: {np.array2string(outputs['ivc.a_th']['value'], formatter=desvar_formatter, separator=', ')}"
         if not self.options["fix_te"]:
