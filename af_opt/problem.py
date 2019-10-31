@@ -136,6 +136,7 @@ def main(
     t_c_min=0.01,
     r_le_min=0.05,
     A_cs_min=None,
+    A_bins_min=None,
     Cm_max=None,
     strategy="rand-to-best/1/exp/random",
     f=None,
@@ -174,6 +175,8 @@ def main(
         Minimum leading edge radius. None if unconstrained. Defaults is 0.05.
     A_cs_min : float or None, optional
         Minimum cross sectional area. None if unconstrained. Default is None.
+    A_bins_min : float or None, optional
+        Minimum relative area of the airfoil in each bin along the chord. None if unconstrained. Default is None.
     Cm_max : float or None, optional
         Maximum absolute moment coefficient. None if unconstrained. Default is None.
     strategy : string, optional
@@ -196,6 +199,7 @@ def main(
         t_c_min=t_c_min,
         r_le_min=r_le_min,
         A_cs_min=A_cs_min,
+        A_bins_min=A_bins_min,
         Cm_max=Cm_max,
     )
 
@@ -237,7 +241,7 @@ def main(
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 22:
+    if len(sys.argv) == 23:
         main(
             cl=float(sys.argv[1]),
             re=float(sys.argv[2]),
@@ -252,14 +256,15 @@ if __name__ == "__main__":
             t_c_min=None if sys.argv[11] == "None" else float(sys.argv[11]),
             r_le_min=None if sys.argv[12] == "None" else float(sys.argv[12]),
             A_cs_min=None if sys.argv[13] == "None" else float(sys.argv[13]),
-            Cm_max=None if sys.argv[14] == "None" else float(sys.argv[14]),
-            strategy=sys.argv[15],
-            f=None if sys.argv[16] == "None" else float(sys.argv[16]),
-            cr=None if sys.argv[17] == "None" else float(sys.argv[17]),
-            adaptivity=int(sys.argv[18]),
-            repr_file=sys.argv[19],
-            dat_file=sys.argv[20],
-            png_file=sys.argv[21],
+            A_bins_min=None if sys.argv[14] == "None" else float(sys.argv[14]),
+            Cm_max=None if sys.argv[15] == "None" else float(sys.argv[15]),
+            strategy=sys.argv[16],
+            f=None if sys.argv[17] == "None" else float(sys.argv[17]),
+            cr=None if sys.argv[18] == "None" else float(sys.argv[18]),
+            adaptivity=int(sys.argv[19]),
+            repr_file=sys.argv[20],
+            dat_file=sys.argv[21],
+            png_file=sys.argv[22],
         )
     else:
         main(1.0, 1e6, 0.0, 3, 3, gen=9)
