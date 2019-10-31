@@ -3,7 +3,7 @@
 """
 This file contains imports and checks to detect MPI.
 """
-from .version import __version__
+__version__ = "0.9.0"
 
 # Ensure MPI is defined
 try:
