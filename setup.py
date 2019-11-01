@@ -15,6 +15,9 @@ setup(
     author="Daniel de Vries",
     author_email="danieldevries6@gmail.com",
     packages=find_packages(),
+    package_data={
+        "af_opt": ["*/tests/*.py", "*/*/tests/*.py", "components/tests/clark-y.dat"]
+    },
     install_requires=[
         "numpy>=1.17",
         "openmdao<2.10,>=2.8",
@@ -23,6 +26,7 @@ setup(
         "differential_evolution<2,>=1.7.0",
         "matplotlib<4,>=3",
     ],
+    extras_require={"test": ["parameterized"]},
     url="https://github.com/daniel-de-vries/airfoil-optimizer",
     download_url="https://github.com/daniel-de-vries/airfoil-optimizer/archive/v{0}.tar.gz".format(
         __version__
